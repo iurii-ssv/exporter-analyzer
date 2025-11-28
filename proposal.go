@@ -4,16 +4,17 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/attestantio/go-eth2-client/spec/phase0"
+
 	"code-is-fun/client"
 )
 
-func proposal() {
+// proposal accepts slot only (since there is only 1 proposer per slot, there is no need to specify a cluster).
+func proposal(targetSlot phase0.Slot) {
 	const baseURL = "http://mainnet-ssv-node-exporter-1.production.vnet.ops.ssvlabsinternal.com"
 	c := client.NewClient(baseURL)
 
-	const targetSlot = 13119734
-
-	resp, err := c.GetValidatorTraces(context.Background(), targetSlot, targetSlot, []string{"PROPOSER"})
+	resp, err := c.GetValidatorTraces(context.Background(), uint64(targetSlot), uint64(targetSlot), []string{"PROPOSER"})
 	if err != nil {
 		panic(fmt.Sprintf("error getting validator traces: %v", err))
 	}
